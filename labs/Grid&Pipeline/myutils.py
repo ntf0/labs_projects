@@ -1,7 +1,14 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
+import sklearn
+import matplotlib.pyplot as plt
+import seaborn as sns
 
+from sklearn.preprocessing import PowerTransformer
+
+from sklearn.metrics import mean_squared_error, r2_score
 
 
 def skew_calc(df):
@@ -96,6 +103,7 @@ def skew_calc(df):
         skew_table["Skewness"] = skew_table["Skewness"].round(3)
 
     return skew_table
+
 
 
 def plot_transformations(df, skew_table):
@@ -216,3 +224,34 @@ def plot_transformations(df, skew_table):
         plt.show()
 
     return transformed_df
+
+    
+def evaluate_model(model, X_train, X_test, y_train, y_test, model_name="Model"):
+    """
+    Predicts and calculates R2 and RMSE for both train and test sets.
+    Then prints the Train R2 and RMSE along with the Test R2 and RMSE
+    """
+    print(f"--- {model_name} Performance ---")
+    
+    # Generate predictions for training and testing data
+    y_train_pred = model.predict(X_train)
+    y_test_pred = model.predict(X_test)
+
+    # Calculate R² for training and testing data
+    train_r2 = r2_score(y_train, y_train_pred)
+    test_r2 = r2_score(y_test, y_test_pred)
+
+    # Calculate RMSE for training and testing data
+    train_rmse = np.sqrt(
+        mean_squared_error(y_train, y_train_pred)
+    )
+
+    test_rmse = np.sqrt(
+        mean_squared_error(y_test, y_test_pred)
+    )
+
+    # Print results
+    print(f"Train R²:   {train_r2:.4f}")
+    print(f"Test R²:    {test_r2 :.4f}")
+    print(f"Train RMSE: {train_rmse:.4f}")
+    print(f"Test RMSE:  {test_rmse:.4f}")    
